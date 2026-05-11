@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0f1110;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #0f1110;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@layer components {
+  .panel {
+    @apply rounded-md border border-line bg-panel p-4 shadow-soft;
+  }
+
+  .section-title {
+    @apply mb-4 flex items-start justify-between gap-4;
+  }
+
+  .eyebrow {
+    @apply text-xs font-medium uppercase tracking-wide text-muted;
+  }
+
+  .field {
+    @apply h-10 rounded-md border border-line bg-[#101210] px-3 text-sm text-ink outline-none transition;
+  }
+
+  .field:focus {
+    @apply border-moss/70 ring-2 ring-moss/10;
+  }
+
+  .icon-button {
+    @apply grid h-10 w-10 shrink-0 place-items-center rounded-md border border-line bg-[#101210] text-muted transition hover:border-moss/60 hover:text-ink;
+  }
+
+  .ghost-icon {
+    @apply grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted transition hover:bg-white/5 hover:text-ink;
+  }
+
+  .primary-button {
+    @apply inline-flex h-10 items-center gap-2 rounded-md border border-moss/40 bg-moss/20 px-3 text-sm font-medium text-ink transition hover:bg-moss/30;
+  }
+
+  .primary-button.rust {
+    @apply border-rust/40 bg-rust/20 hover:bg-rust/30;
+  }
+
+  .nav-item {
+    @apply flex h-9 items-center gap-2 rounded-md px-2 text-sm text-muted transition hover:bg-white/5 hover:text-ink;
+  }
+
+  .nav-item.active {
+    @apply text-ink;
+    background-color: rgb(255 255 255 / 0.08);
+  }
+
+  .task-row {
+    @apply flex min-h-12 items-center gap-2 rounded-md border border-line bg-[#101210] px-2.5 py-2 transition hover:border-white/15;
+  }
+
+  .pill {
+    @apply rounded border border-line px-2 py-0.5 text-xs text-muted;
+  }
+
+  .pill.hot {
+    @apply border-rust/30 bg-rust/10 text-rust;
+  }
+
+  .pill.cool {
+    @apply border-sky/30 bg-sky/10 text-sky;
+  }
+
+  .calendar-event {
+    @apply flex min-h-12 items-start gap-1 rounded border px-2 py-1.5 text-left text-xs;
+  }
+
+  .calendar-event.deadline {
+    @apply border-rust/30 bg-rust/15 text-rust;
+  }
+
+  .calendar-event.exam {
+    @apply border-plum/30 bg-plum/15 text-plum;
+  }
+
+  .calendar-event.meeting {
+    @apply border-sky/30 bg-sky/15 text-sky;
+  }
+
+  .calendar-event.class {
+    @apply border-moss/30 bg-moss/15 text-moss;
+  }
+
+  .calendar-event.reminder {
+    @apply border-line bg-white/[0.04] text-muted;
+  }
+}

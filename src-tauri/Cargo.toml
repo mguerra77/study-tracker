@@ -1,0 +1,21 @@
+[package]
+name = "study-tracker"
+version = "0.1.0"
+description = "Local personal study and work organizer"
+authors = ["study-tracker"]
+edition = "2021"
+
+[lib]
+name = "study_tracker_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.1", features = [] }
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "2.2", features = [] }
+thiserror = "2"
+
