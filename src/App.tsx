@@ -123,6 +123,13 @@ const eventTypeLabels: Record<EventType, string> = {
   class: "Clase",
 };
 
+interface DayScheduleBlock {
+  id: number;
+  start: string;
+  end: string;
+  title: string;
+}
+
 function App() {
   const store = useTracker();
   const today = todayKey();
@@ -135,6 +142,10 @@ function App() {
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventDate, setNewEventDate] = useState(today);
   const [newEventType, setNewEventType] = useState<EventType>("deadline");
+  const [scheduleStart, setScheduleStart] = useState("20:00");
+  const [scheduleEnd, setScheduleEnd] = useState("21:00");
+  const [scheduleTitle, setScheduleTitle] = useState("");
+  const [daySchedule, setDaySchedule] = useState<DayScheduleBlock[]>([]);
 
   useEffect(() => {
     store.loadAll();
@@ -211,6 +222,23 @@ function App() {
     };
     await store.createEvent(input);
     setNewEventTitle("");
+  };
+
+  const createScheduleBlock = (event: FormEvent) => {
+    event.preventDefault();
+    if (!scheduleTitle.trim() || !scheduleStart || !scheduleEnd) return;
+    setDaySchedule((items) =>
+      [
+        ...items,
+        {
+          id: Date.now(),
+          start: scheduleStart,
+          end: scheduleEnd,
+          title: scheduleTitle.trim(),
+        },
+      ].sort((a, b) => a.start.localeCompare(b.start)),
+    );
+    setScheduleTitle("");
   };
 
   const onDragEnd = async (result: DropResult) => {
@@ -341,6 +369,18 @@ function App() {
                 </Droppable>
               </DragDropContext>
             </section>
+
+            <DaySchedulePanel
+              items={daySchedule}
+              start={scheduleStart}
+              end={scheduleEnd}
+              title={scheduleTitle}
+              setStart={setScheduleStart}
+              setEnd={setScheduleEnd}
+              setTitle={setScheduleTitle}
+              onCreate={createScheduleBlock}
+              onDelete={(id) => setDaySchedule((items) => items.filter((item) => item.id !== id))}
+            />
 
             <FocusPanel
               task={focusTask}
@@ -516,6 +556,63 @@ function TaskRow(props: {
         <GripVertical className="h-4 w-4" />
       </button>
     </div>
+  );
+}
+
+function DaySchedulePanel(props: {
+  items: DayScheduleBlock[];
+  start: string;
+  end: string;
+  title: string;
+  setStart: (value: string) => void;
+  setEnd: (value: string) => void;
+  setTitle: (value: string) => void;
+  onCreate: (event: FormEvent) => void;
+  onDelete: (id: number) => void;
+}) {
+  return (
+    <section className="panel">
+      <div className="section-title">
+        <div>
+          <p className="eyebrow">Cronograma</p>
+          <h2 className="text-lg font-semibold">Hoy por horas</h2>
+        </div>
+        <Clock3 className="h-5 w-5 text-sky" />
+      </div>
+
+      <form onSubmit={props.onCreate} className="grid gap-2 md:grid-cols-[104px_104px_1fr_42px]">
+        <input value={props.start} onChange={(event) => props.setStart(event.target.value)} type="time" className="field" />
+        <input value={props.end} onChange={(event) => props.setEnd(event.target.value)} type="time" className="field" />
+        <input
+          value={props.title}
+          onChange={(event) => props.setTitle(event.target.value)}
+          className="field"
+          placeholder="Estudio Ciencia de datos, gimnasio..."
+        />
+        <button className="icon-button" title="Agregar bloque">
+          <Plus className="h-4 w-4" />
+        </button>
+      </form>
+
+      <div className="mt-4 space-y-2">
+        {props.items.map((item) => (
+          <div key={item.id} className="flex items-stretch overflow-hidden rounded-md border border-line bg-[#101210]">
+            <div className="grid w-24 shrink-0 place-items-center border-r border-line px-2 py-3 text-center">
+              <p className="text-sm font-semibold tabular-nums">{item.start}</p>
+              <p className="text-xs text-muted">{item.end}</p>
+            </div>
+            <div className="flex min-w-0 flex-1 items-center gap-3 px-3 py-3">
+              <span className="h-8 w-1 rounded-full bg-sky" />
+              <p className="min-w-0 flex-1 truncate text-sm font-medium">{item.title}</p>
+              <button onClick={() => props.onDelete(item.id)} className="ghost-icon" title="Eliminar bloque">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        ))}
+        {props.items.length === 0 ? <EmptyLine text="Armá un plan simple para las próximas horas." /> : null}
+      </div>
+    </section>
   );
 }
 
