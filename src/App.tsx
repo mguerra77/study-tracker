@@ -701,6 +701,26 @@ function Metric(props: { label: string; value: string }) {
   );
 }
 
+function DateTextInput(props: {
+  value: string;
+  onChange: (value: string) => void;
+  className?: string;
+  title?: string;
+}) {
+  return (
+    <input
+      value={props.value}
+      onChange={(event) => props.onChange(event.target.value)}
+      type="text"
+      inputMode="numeric"
+      pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+      className={clsx("field", props.className)}
+      placeholder="YYYY-MM-DD"
+      title={props.title ?? "Fecha en formato YYYY-MM-DD"}
+    />
+  );
+}
+
 function CalendarPanel(props: {
   events: CalendarEvent[];
   title: string;
@@ -749,7 +769,7 @@ function CalendarPanel(props: {
           <option value="class">Clase</option>
           <option value="reminder">Recordatorio</option>
         </select>
-        <input value={props.date} onChange={(event) => props.setDate(event.target.value)} type="date" className="field" />
+        <DateTextInput value={props.date} onChange={props.setDate} />
         <button className="icon-button" title="Agregar evento">
           <Plus className="h-4 w-4" />
         </button>
@@ -876,13 +896,7 @@ function ProjectView({ project }: { project: Project }) {
           <option value="practice">Práctica</option>
           <option value="note">Apunte</option>
         </select>
-        <input
-          value={plannedDate}
-          onChange={(event) => setPlannedDate(event.target.value)}
-          type="date"
-          className="field"
-          title="Fecha de estudio"
-        />
+        <DateTextInput value={plannedDate} onChange={setPlannedDate} title="Fecha de estudio" />
         <button className="icon-button" title="Agregar ítem">
           <Plus className="h-4 w-4" />
         </button>
@@ -1044,11 +1058,10 @@ function StudyRow(props: {
           <div className="h-full rounded-full bg-moss" style={{ width: `${studyStatusValue[props.item.status]}%` }} />
         </div>
       </div>
-      <input
+      <DateTextInput
         value={props.item.planned_date ?? ""}
-        onChange={(event) => props.onSetDate(event.target.value)}
-        type="date"
-        className="field hidden h-8 w-36 md:block"
+        onChange={props.onSetDate}
+        className="hidden h-8 w-36 md:block"
         title="Fecha de estudio"
       />
       <button onClick={props.onEdit} className="ghost-icon" title="Editar">

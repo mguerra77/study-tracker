@@ -27,6 +27,34 @@ sudo apt install -y libdbus-1-dev pkg-config libpango1.0-dev libgdk-pixbuf-2.0-d
 
 La base SQLite se crea automáticamente en el directorio de datos de la app de Tauri. En el primer arranque se cargan las áreas `Facultad`, `Trabajo` y `Personal`.
 
+## Exportar DB
+
+Para regenerar `database-export.sql` desde la SQLite local:
+
+```bash
+npm run db:export
+```
+
+Si la base no está en la ubicación típica de Tauri, indicá la ruta manualmente:
+
+```bash
+STUDY_TRACKER_DB=/ruta/a/study-tracker.sqlite3 npm run db:export
+```
+
+## Importar DB
+
+Para restaurar `database-export.sql` en la SQLite local, cerrá la app y ejecutá:
+
+```bash
+npm run db:import
+```
+
+El import crea un backup de la base anterior antes de reemplazarla. También podés indicar rutas manualmente:
+
+```bash
+STUDY_TRACKER_DB=/ruta/a/study-tracker.sqlite3 npm run db:import -- ./database-export.sql
+```
+
 ## MVP Incluido
 
 - CRUD de áreas, proyectos, tareas, study items, sesiones, eventos y notas desde comandos Tauri.
