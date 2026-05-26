@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TAURI_BIN="$ROOT_DIR/node_modules/.bin/tauri"
+REAL_HOME="${SNAP_REAL_HOME:-"$HOME"}"
 
 # VS Code instalado por Snap contamina procesos hijos con rutas GTK/GIO del
 # runtime de Snap. Tauri/WebKit necesita resolver las librerias del sistema.
@@ -12,6 +13,9 @@ done
 
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
+
+export HOME="$REAL_HOME"
+export XDG_DATA_HOME="$REAL_HOME/.local/share"
 
 if [[ -n "${XDG_DATA_DIRS_VSCODE_SNAP_ORIG:-}" ]]; then
   export XDG_DATA_DIRS="$XDG_DATA_DIRS_VSCODE_SNAP_ORIG"

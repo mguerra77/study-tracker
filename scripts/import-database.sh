@@ -14,7 +14,9 @@ if [[ ! -f "$INPUT_PATH" ]]; then
   exit 1
 fi
 
-DATA_HOME="${XDG_DATA_HOME:-"$HOME/.local/share"}"
+REAL_HOME="${SNAP_REAL_HOME:-"$HOME"}"
+DATA_HOME="$REAL_HOME/.local/share"
+SNAP_DATA_HOME="${XDG_DATA_HOME:-}"
 DEFAULT_DB_PATH="$DATA_HOME/app.local.studytracker/study-tracker.sqlite3"
 
 if [[ -n "${STUDY_TRACKER_DB:-}" ]]; then
@@ -24,8 +26,12 @@ else
     "$DATA_HOME/app.local.studytracker/study-tracker.sqlite3"
     "$DATA_HOME/Study Tracker/study-tracker.sqlite3"
     "$DATA_HOME/study-tracker/study-tracker.sqlite3"
-    "$HOME/.local/share/app.local.studytracker/study-tracker.sqlite3"
+    "$REAL_HOME/.local/share/app.local.studytracker/study-tracker.sqlite3"
   )
+
+  if [[ -n "$SNAP_DATA_HOME" && "$SNAP_DATA_HOME" != "$DATA_HOME" ]]; then
+    CANDIDATES+=("$SNAP_DATA_HOME/app.local.studytracker/study-tracker.sqlite3")
+  fi
 
   DB_PATH=""
   for candidate in "${CANDIDATES[@]}"; do
